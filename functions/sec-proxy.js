@@ -1,9 +1,9 @@
 // This is the final working version of the serverless function.
-// It uses a CORS proxy for the final, problematic fetch request to bypass IP blocking from www.sec.gov.
+// It mimics user behavior by fetching the full .txt filing document,
+// which is less likely to be blocked than direct XML access.
 
 async function parseHoldingsFromXml(xmlText) {
   const holdings = [];
-  // This regex is designed to be robust for the 13F infoTable format.
   const infoTableRegex = /<infoTable>([\s\S]*?)<\/infoTable>/g;
   let match;
 
@@ -34,19 +34,20 @@ export async function onRequest(context) {
     return new Response(JSON.stringify({ error: 'CIK is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
+  // Use a common browser User-Agent to appear as a regular user.
   const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36' };
-  const cikPadded = cik.padStart(10, '0');
-
+  
   try {
-    // --- Step 1: Get submissions (This part works fine) ---
+    // --- Step 1: Get submissions to find the latest 13F-HR filing ---
+    const cikPadded = cik.padStart(10, '0');
     const submissionsUrl = `https://data.sec.gov/submissions/CIK${cikPadded}.json`;
     const submissionsResponse = await fetch(submissionsUrl, { headers });
     if (!submissionsResponse.ok) {
-        throw new Error(`SEC submissions API failed with status: ${submissionsResponse.status}`);
+        throw new Error(`SEC submissions API failed: Status ${submissionsResponse.status}`);
     }
     const submissionsData = await submissionsResponse.json();
 
-    // --- Step 2: Find latest 13F-HR filing (This part works fine) ---
+    // --- Step 2: Find the latest 13F-HR filing's accession number ---
     const recentFilings = submissionsData.filings.recent;
     let latest13F = null;
     for (let i = 0; i < recentFilings.form.length; i++) {
@@ -57,26 +58,25 @@ export async function onRequest(context) {
     }
 
     if (!latest13F) {
-        throw new Error("No recent 13F-HR filing found for CIK " + cik);
+        throw new Error("No recent 13F-HR filing found for this CIK.");
     }
     
-    // --- Step 3: Fetch the holdings XML via a CORS Proxy (This is the fix) ---
+    // --- Step 3: Fetch the full .txt filing document ---
     const accessionNumberNoDash = latest13F.accessionNumber.replace(/-/g, '');
-    const targetUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumberNoDash}/form13fInfoTable.xml`;
-    
-    // We use a public CORS proxy to make the request on our behalf.
-    // This hides the Cloudflare server's IP address from the SEC server.
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-    
-    const holdingsResponse = await fetch(proxyUrl, { headers });
-    if (!holdingsResponse.ok) {
-        throw new Error(`CORS Proxy fetch for holdings data failed. Status: ${holdingsResponse.status}`);
-    }
-    const xmlText = await holdingsResponse.text();
+    const filingTxtUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumberNoDash}/${latest13F.accessionNumber}.txt`;
 
-    // --- Step 4: Parse XML and return data ---
-    const holdings = await parseHoldingsFromXml(xmlText);
-    
+    const holdingsResponse = await fetch(filingTxtUrl, { headers });
+    if (!holdingsResponse.ok) {
+        throw new Error(`Failed to fetch filing document. Status: ${holdingsResponse.status}`);
+    }
+    const txtData = await holdingsResponse.text();
+
+    // --- Step 4: Parse holdings from the text file and return ---
+    const holdings = await parseHoldingsFromXml(txtData);
+    if (holdings.length === 0) {
+        throw new Error("Could not parse holdings from the filing document.");
+    }
+
     return new Response(JSON.stringify(holdings), {
       headers: { 
         'Content-Type': 'application/json',
