@@ -1,23 +1,20 @@
 async function fetchCailianData(type = 'latest') {
     // 根据类型获取不同的财联社数据
-    const currentTime = Math.floor(Date.now() / 1000);
     let apiEndpoints = [];
     
     if (type === 'latest') {
-      // 最新电报端点 - 使用不同的参数组合
+      // 最新电报端点 - 使用最基础的可靠端点
       apiEndpoints = [
-        `https://www.cls.cn/nodeapi/refreshTelegraphList?app=CailianpressWeb&lastTime=0&os=web&sv=7.7.5&rn=10`,
         `https://www.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=10&last_time=0`,
         `https://api.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=10&last_time=0`,
         `https://www.cls.cn/telegraph/api/roll_news?refresh_type=1&rn=10&last_time=0`
       ];
     } else {
-      // 热门电报端点 - 基于阅读量排序
+      // 热门电报端点 - 使用热门专用API
       apiEndpoints = [
-        `https://www.cls.cn/nodeapi/refreshTelegraphList?app=CailianpressWeb&lastTime=0&os=web&sv=7.7.5&rn=10&order=readCount`,
-        `https://www.cls.cn/nodeapi/hottelegraphs?rn=10&order=read_count`,
-        `https://www.cls.cn/nodeapi/telegraphs?refresh_type=3&rn=10&order=read_count`,
-        `https://api.cls.cn/nodeapi/hottelegraphs?rn=10`
+        `https://www.cls.cn/nodeapi/hottelegraphs?rn=10`,
+        `https://api.cls.cn/nodeapi/hottelegraphs?rn=10`,
+        `https://www.cls.cn/nodeapi/telegraphs?refresh_type=2&rn=10&last_time=0`
       ];
     }
     
@@ -27,9 +24,7 @@ async function fetchCailianData(type = 'latest') {
       'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
       'Referer': 'https://www.cls.cn/telegraph',
       'Origin': 'https://www.cls.cn',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache'
+      'X-Requested-With': 'XMLHttpRequest'
     };
     
     let lastError = null;
@@ -47,7 +42,7 @@ async function fetchCailianData(type = 'latest') {
         }
         
         const data = await response.json();
-        console.log(`财联社${type}API成功: ${url}`, JSON.stringify(data).substring(0, 200));
+        console.log(`财联社${type}API成功: ${url}`, JSON.stringify(data).substring(0, 300));
         
         // 检查不同的数据结构
         let articles = null;
@@ -56,14 +51,9 @@ async function fetchCailianData(type = 'latest') {
         if (data.data && data.data.roll_data) {
           articles = data.data.roll_data;
         }
-        // 检查新格式（refreshTelegraphList返回的结构）
+        // 检查直接数组格式
         else if (data.data && Array.isArray(data.data)) {
           articles = data.data;
-        }
-        // 检查对象格式（基于搜索发现的结构）
-        else if (data.l) {
-          // 将对象转换为数组
-          articles = Object.values(data.l);
         }
         // 检查其他可能的格式
         else if (Array.isArray(data)) {
@@ -74,19 +64,28 @@ async function fetchCailianData(type = 'latest') {
         }
         
         if (!articles || articles.length === 0) {
+          console.log(`API返回数据为空或结构不正确: ${JSON.stringify(data).substring(0, 500)}`);
           throw new Error('API返回数据结构不正确或为空');
         }
         
-        // 过滤掉空白内容并限制返回10条数据
+        console.log(`找到${articles.length}条原始数据`);
+        
+        // 过滤并处理数据，但不要过于严格
         const validArticles = articles.filter(item => {
           const content = item.content || item.title || item.brief || '';
-          return content.trim().length > 0; // 过滤掉空白内容
+          return content && content.trim().length > 5; // 至少5个字符
         }).slice(0, 10);
+        
+        console.log(`过滤后有效数据${validArticles.length}条`);
+        
+        if (validArticles.length === 0) {
+          throw new Error('过滤后没有有效数据');
+        }
         
         return validArticles.map(item => ({
           id: `cl_${item.id || item.newsId || Math.random()}`,
-          time: formatTime(item.ctime || item.time || item.createTime || Date.now() / 1000),
-          content: (item.content || item.title || item.brief || '无内容').trim(),
+          time: formatTime(item.ctime || item.time || item.createTime),
+          content: (item.content || item.title || item.brief || '').trim(),
           url: `https://www.cls.cn/detail/${item.id || item.newsId || ''}`,
           readCount: item.read_count || item.readCount || item.readNum || 0
         }));
@@ -99,7 +98,7 @@ async function fetchCailianData(type = 'latest') {
     }
     
     // 如果所有API都失败，返回空数据而不是抛出错误
-    console.error(`所有财联社${type}API端点都失败，返回空数据`);
+    console.error(`所有财联社${type}API端点都失败，返回空数据`, lastError?.message);
     return [];
   }
 
@@ -131,19 +130,16 @@ async function fetchCailianData(type = 'latest') {
     if (type === 'latest') {
       // 最新快讯端点 - 按时间排序
       apiEndpoints = [
-        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time&category=6',
         'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time',
         'https://wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time',
         'https://api.wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time'
       ];
     } else {
-      // 重要快讯端点 - 按重要性筛选
+      // 重要快讯端点 - 完全不同的参数以获取不同数据
       apiEndpoints = [
-        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&importance=high',
-        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&level=important', 
-        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&category=6&importance=1',
-        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=importance',
-        'https://wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=importance'
+        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=20&importance=3', // 获取更多数据再筛选
+        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=20&level=3',
+        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=20' // 备用：获取更多数据然后手动筛选
       ];
     }
     
@@ -170,7 +166,7 @@ async function fetchCailianData(type = 'latest') {
         }
         
         const data = await response.json();
-        console.log(`华尔街见闻${type}API成功: ${url}`, JSON.stringify(data).substring(0, 200));
+        console.log(`华尔街见闻${type}API成功: ${url}`);
         
         // 检查数据结构
         if (!data.data || !data.data.items) {
@@ -178,36 +174,60 @@ async function fetchCailianData(type = 'latest') {
         }
         
         const articles = data.data.items;
+        console.log(`华尔街见闻${type}获取到${articles.length}条原始数据`);
         
-        // 如果是hottest类型，尝试筛选重要消息
+        // 如果是hottest类型，进行严格的重要性筛选
         let filteredArticles = articles;
         if (type === 'hottest') {
-          // 尝试筛选有重要性标识的消息
-          const importantArticles = articles.filter(item => 
-            item.importance > 0 || 
-            item.level === 'important' || 
-            item.is_important === true ||
-            (item.content_text && (
-              item.content_text.includes('重要') || 
-              item.content_text.includes('紧急') ||
-              item.content_text.includes('突发')
-            ))
-          );
+          // 更严格的重要性筛选
+          const importantArticles = articles.filter(item => {
+            // 检查多种重要性标识
+            const hasImportanceFlag = 
+              item.importance > 0 || 
+              item.level === 'important' || 
+              item.is_important === true ||
+              item.priority === 'high' ||
+              item.urgent === true;
+            
+            // 检查内容关键词
+            const contentText = item.content_text || '';
+            const hasImportantKeywords = 
+              contentText.includes('重要') || 
+              contentText.includes('紧急') ||
+              contentText.includes('突发') ||
+              contentText.includes('重磅') ||
+              contentText.includes('关注') ||
+              contentText.includes('重大');
+            
+            return hasImportanceFlag || hasImportantKeywords;
+          });
           
-          // 如果有重要消息，使用筛选后的，否则使用全部
-          if (importantArticles.length > 0) {
+          console.log(`华尔街见闻重要性筛选：原始${articles.length}条，筛选后${importantArticles.length}条`);
+          
+          // 如果筛选后有足够的数据，使用筛选后的；否则取前10条但标记重要性
+          if (importantArticles.length >= 5) {
             filteredArticles = importantArticles;
+          } else {
+            // 如果重要消息太少，从所有消息中选择相对重要的
+            filteredArticles = articles.sort((a, b) => {
+              const scoreA = (a.importance || 0) + (a.content_text?.includes('重要') ? 1 : 0);
+              const scoreB = (b.importance || 0) + (b.content_text?.includes('重要') ? 1 : 0);
+              return scoreB - scoreA;
+            });
           }
         }
         
         // 限制返回10条数据
-        return filteredArticles.slice(0, 10).map(item => ({
+        const result = filteredArticles.slice(0, 10).map(item => ({
           id: `wscn_${item.id}`,
-          time: formatTime(item.display_time || item.created_at),
+          time: formatWallstreetcnTime(item.display_time),
           content: item.content_text || item.title || '无内容',
           url: item.uri || `https://wallstreetcn.com/articles/${item.id}`,
           importance: item.importance || (item.level === 'important' ? 1 : 0) || 0
         }));
+        
+        console.log(`华尔街见闻${type}最终返回${result.length}条数据`);
+        return result;
         
       } catch (error) {
         console.error(`华尔街见闻${type}API失败 ${url}:`, error.message);
@@ -224,6 +244,10 @@ async function fetchCailianData(type = 'latest') {
   // 统一的时间格式化函数
   function formatTime(timestamp) {
     try {
+      if (!timestamp) {
+        return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+      }
+      
       let date;
       if (typeof timestamp === 'string') {
         date = new Date(timestamp);
@@ -234,13 +258,35 @@ async function fetchCailianData(type = 'latest') {
       }
       
       if (isNaN(date.getTime())) {
-        return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
       
-      return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
     } catch (error) {
       console.error('时间格式化错误:', error);
-      return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
+  }
+
+  // 华尔街见闻专用时间格式化函数
+  function formatWallstreetcnTime(timestamp) {
+    try {
+      if (!timestamp) {
+        return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+      }
+      
+      // 华尔街见闻通常使用秒级时间戳
+      const date = new Date(timestamp * 1000);
+      
+      if (isNaN(date.getTime())) {
+        return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+      }
+      
+      // 使用中文时间格式，与官网保持一致
+      return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    } catch (error) {
+      console.error('华尔街见闻时间格式化错误:', error);
+      return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
     }
   }
 
