@@ -257,6 +257,7 @@
                     hideTrades: "Hide Trades",
                     fetchingData: "Fetching...",
                     fetchFailed: "Fetch failed, showing mock data.",
+                    fetchFailedWithReason: "Fetch failed: ",
                     newsFilters: { latest: 'Latest', hottest: 'Hottest' },
                     newsPlatforms: { cailian: 'Cailian', wallstreetcn: 'Wallstreetcn' },
                 }
@@ -504,15 +505,10 @@
                 try {
                     const proxyUrl = `/sec-proxy?cik=${investor.filingId}`;
                     const response = await fetch(proxyUrl);
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({error: `Proxy failed with status: ${response.status}`}));
-                        throw new Error(errorData.error || `Proxy request failed.`);
-                    }
-                    
                     const holdings = await response.json();
-                    if(holdings.error) { // Check if the proxy returned a JSON error
-                        throw new Error(holdings.error);
+                    
+                    if (!response.ok || holdings.error) {
+                        throw new Error(holdings.error || `Proxy failed with status: ${response.status}`);
                     }
 
                     investor.data = holdings;
@@ -524,8 +520,9 @@
                     const detailsDiv = document.getElementById(`portfolio-${investor.id}`);
                     if(detailsDiv) {
                         const errorEl = document.createElement('p');
-                        errorEl.className = 'text-xs text-red-500 py-2';
-                        errorEl.textContent = langContent.fetchFailed;
+                        errorEl.className = 'text-xs text-red-500 py-2 break-all';
+                        // *** UPDATED to show detailed error ***
+                        errorEl.textContent = `${langContent.fetchFailedWithReason || 'Fetch Failed:'} ${error.message}`;
                         detailsDiv.prepend(errorEl);
                     }
                 } finally {
