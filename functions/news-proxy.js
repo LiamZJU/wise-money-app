@@ -1,15 +1,23 @@
-async function fetchCailian() {
-    // 根据搜索结果，尝试多个财联社API端点
+async function fetchCailianData(type = 'latest') {
+    // 根据类型获取不同的财联社数据
     const currentTime = Math.floor(Date.now() / 1000);
-    const apiEndpoints = [
-      // 原始API
-      'https://www.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=20&last_time=',
-      // 基于搜索发现的新API格式
-      `https://www.cls.cn/nodeapi/refreshTelegraphList?app=CailianpressWeb&lastTime=${currentTime}&os=web&sv=7.7.5`,
-      // 备用端点
-      'https://api.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=20&last_time=',
-      'https://m.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=20&last_time='
-    ];
+    let apiEndpoints = [];
+    
+    if (type === 'latest') {
+      // 最新电报端点
+      apiEndpoints = [
+        'https://www.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=10&last_time=',
+        `https://www.cls.cn/nodeapi/refreshTelegraphList?app=CailianpressWeb&lastTime=${currentTime}&os=web&sv=7.7.5`,
+        'https://api.cls.cn/nodeapi/telegraphs?refresh_type=1&rn=10&last_time='
+      ];
+    } else {
+      // 热门电报端点（基于阅读量）
+      apiEndpoints = [
+        'https://www.cls.cn/nodeapi/telegraphs?refresh_type=2&rn=10&last_time=',
+        'https://www.cls.cn/nodeapi/hottelegraphs?rn=10',
+        'https://api.cls.cn/nodeapi/telegraphs?refresh_type=2&rn=10&last_time='
+      ];
+    }
     
     const headers = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -26,7 +34,7 @@ async function fetchCailian() {
     
     for (const url of apiEndpoints) {
       try {
-        console.log(`尝试财联社API: ${url}`);
+        console.log(`尝试财联社${type}API: ${url}`);
         const response = await fetch(url, { 
           headers,
           timeout: 10000 // 10秒超时
@@ -37,7 +45,7 @@ async function fetchCailian() {
         }
         
         const data = await response.json();
-        console.log(`财联社API成功: ${url}`, JSON.stringify(data).substring(0, 200));
+        console.log(`财联社${type}API成功: ${url}`, JSON.stringify(data).substring(0, 200));
         
         // 检查不同的数据结构
         let articles = null;
@@ -63,32 +71,68 @@ async function fetchCailian() {
           throw new Error('API返回数据结构不正确或为空');
         }
         
-        return articles.map(item => ({
+        // 限制返回10条数据
+        return articles.slice(0, 10).map(item => ({
           id: `cl_${item.id || item.newsId || Math.random()}`,
           time: new Date((item.ctime || item.time || Date.now() / 1000) * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
           content: item.content || item.title || item.brief || '无内容',
-          url: `https://www.cls.cn/detail/${item.id || item.newsId || ''}`
+          url: `https://www.cls.cn/detail/${item.id || item.newsId || ''}`,
+          readCount: item.read_count || item.readCount || 0
         }));
         
       } catch (error) {
-        console.error(`财联社API失败 ${url}:`, error.message);
+        console.error(`财联社${type}API失败 ${url}:`, error.message);
         lastError = error;
         continue;
       }
     }
     
     // 如果所有API都失败，返回空数据而不是抛出错误
-    console.error('所有财联社API端点都失败，返回空数据');
+    console.error(`所有财联社${type}API端点都失败，返回空数据`);
     return [];
   }
+
+  async function fetchCailian() {
+    try {
+      // 并行获取最新和热门数据
+      const [latest, hottest] = await Promise.all([
+        fetchCailianData('latest'),
+        fetchCailianData('hottest')
+      ]);
+      
+      return {
+        latest: latest,
+        hottest: hottest
+      };
+    } catch (error) {
+      console.error('财联社数据获取失败:', error);
+      return {
+        latest: [],
+        hottest: []
+      };
+    }
+  }
   
-  async function fetchWallstreetcn() {
-    // 尝试多个可能的API端点
-    const apiEndpoints = [
-      'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=20',
-      'https://wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=20',
-      'https://api.wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=20'
-    ];
+  async function fetchWallstreetcnData(type = 'latest') {
+    // 根据类型获取不同的华尔街见闻数据
+    let apiEndpoints = [];
+    
+    if (type === 'latest') {
+      // 最新快讯端点
+      apiEndpoints = [
+        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time',
+        'https://wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time',
+        'https://api.wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=time'
+      ];
+    } else {
+      // 重要快讯端点
+      apiEndpoints = [
+        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=importance',
+        'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global&client=pc&limit=10&importance=1',
+        'https://wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=importance',
+        'https://api.wallstreetcn.com/apiv1/content/lives?channel=global&client=pc&limit=10&order=importance'
+      ];
+    }
     
     const headers = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -102,7 +146,7 @@ async function fetchCailian() {
     
     for (const url of apiEndpoints) {
       try {
-        console.log(`尝试华尔街见闻API: ${url}`);
+        console.log(`尝试华尔街见闻${type}API: ${url}`);
         const response = await fetch(url, { 
           headers,
           timeout: 10000 // 10秒超时
@@ -113,7 +157,7 @@ async function fetchCailian() {
         }
         
         const data = await response.json();
-        console.log(`华尔街见闻API成功: ${url}`);
+        console.log(`华尔街见闻${type}API成功: ${url}`);
         
         // 检查数据结构
         if (!data.data || !data.data.items) {
@@ -121,23 +165,46 @@ async function fetchCailian() {
         }
         
         const articles = data.data.items;
-        return articles.map(item => ({
+        // 限制返回10条数据
+        return articles.slice(0, 10).map(item => ({
           id: `wscn_${item.id}`,
           time: new Date(item.display_time * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
           content: item.content_text,
-          url: item.uri
+          url: item.uri,
+          importance: item.importance || 0
         }));
         
       } catch (error) {
-        console.error(`华尔街见闻API失败 ${url}:`, error.message);
+        console.error(`华尔街见闻${type}API失败 ${url}:`, error.message);
         lastError = error;
         continue;
       }
     }
     
     // 如果所有API都失败，返回空数据而不是抛出错误
-    console.error('所有华尔街见闻API端点都失败，返回空数据');
+    console.error(`所有华尔街见闻${type}API端点都失败，返回空数据`);
     return [];
+  }
+
+  async function fetchWallstreetcn() {
+    try {
+      // 并行获取最新和重要快讯数据
+      const [latest, hottest] = await Promise.all([
+        fetchWallstreetcnData('latest'),
+        fetchWallstreetcnData('hottest')
+      ]);
+      
+      return {
+        latest: latest,
+        hottest: hottest
+      };
+    } catch (error) {
+      console.error('华尔街见闻数据获取失败:', error);
+      return {
+        latest: [],
+        hottest: []
+      };
+    }
   }
   
   export async function onRequest(context) {
@@ -154,13 +221,23 @@ async function fetchCailian() {
           data = await fetchWallstreetcn();
           break;
         default:
-          return new Response(JSON.stringify({ error: 'Valid platform parameter is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+          return new Response(JSON.stringify({ 
+            error: 'Valid platform parameter is required',
+            supportedPlatforms: ['cailian', 'wallstreetcn'] 
+          }), { 
+            status: 400, 
+            headers: { 'Content-Type': 'application/json' } 
+          });
       }
       
-      return new Response(JSON.stringify({ latest: data, hottest: data.slice(0, 5) }), {
+      // 数据已经包含latest和hottest，直接返回
+      return new Response(JSON.stringify(data), {
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 's-maxage=60, stale-while-revalidate'
+          'Cache-Control': 's-maxage=60, stale-while-revalidate',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET',
+          'Access-Control-Allow-Headers': 'Content-Type'
         }
       });
     } catch (error) {
@@ -177,20 +254,28 @@ async function fetchCailian() {
           latest: [], 
           hottest: [], 
           error: platformMessages[platform],
-          debug: error.message 
+          debug: error.message,
+          timestamp: new Date().toISOString()
         }), { 
           status: 200, 
-          headers: { 'Content-Type': 'application/json' } 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          } 
         });
       }
       
       return new Response(JSON.stringify({ 
         latest: [], 
         hottest: [], 
-        error: error.message 
+        error: error.message,
+        timestamp: new Date().toISOString()
       }), { 
         status: 500, 
-        headers: { 'Content-Type': 'application/json' } 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        } 
       });
     }
   }  
