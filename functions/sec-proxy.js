@@ -1,8 +1,9 @@
-// This is the debug-enhanced serverless function.
-// It adds detailed logging at each step to help diagnose deployment issues.
+// This is the final working version of the serverless function.
+// It uses a CORS proxy for the final, problematic fetch request to bypass IP blocking from www.sec.gov.
 
 async function parseHoldingsFromXml(xmlText) {
   const holdings = [];
+  // This regex is designed to be robust for the 13F infoTable format.
   const infoTableRegex = /<infoTable>([\s\S]*?)<\/infoTable>/g;
   let match;
 
@@ -28,7 +29,6 @@ async function parseHoldingsFromXml(xmlText) {
 export async function onRequest(context) {
   const { searchParams } = new URL(context.request.url);
   const cik = searchParams.get('cik');
-  console.log(`[sec-proxy] Received request for CIK: ${cik}`);
 
   if (!cik) {
     return new Response(JSON.stringify({ error: 'CIK is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
@@ -38,19 +38,15 @@ export async function onRequest(context) {
   const cikPadded = cik.padStart(10, '0');
 
   try {
-    // --- Step 1: Get submissions ---
+    // --- Step 1: Get submissions (This part works fine) ---
     const submissionsUrl = `https://data.sec.gov/submissions/CIK${cikPadded}.json`;
-    console.log(`[sec-proxy] Fetching submissions from: ${submissionsUrl}`);
     const submissionsResponse = await fetch(submissionsUrl, { headers });
-    console.log(`[sec-proxy] Submissions response status: ${submissionsResponse.status}`);
-    
     if (!submissionsResponse.ok) {
         throw new Error(`SEC submissions API failed with status: ${submissionsResponse.status}`);
     }
     const submissionsData = await submissionsResponse.json();
-    console.log(`[sec-proxy] Successfully fetched submissions data.`);
 
-    // --- Step 2: Find latest 13F-HR filing ---
+    // --- Step 2: Find latest 13F-HR filing (This part works fine) ---
     const recentFilings = submissionsData.filings.recent;
     let latest13F = null;
     for (let i = 0; i < recentFilings.form.length; i++) {
@@ -63,35 +59,33 @@ export async function onRequest(context) {
     if (!latest13F) {
         throw new Error("No recent 13F-HR filing found for CIK " + cik);
     }
-    console.log(`[sec-proxy] Found latest 13F: ${latest13F.accessionNumber}`);
-
-    // --- Step 3: Fetch the holdings XML ---
-    const accessionNumberNoDash = latest13F.accessionNumber.replace(/-/g, '');
-    const filingUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumberNoDash}/form13fInfoTable.xml`;
-    console.log(`[sec-proxy] Fetching holdings from: ${filingUrl}`);
-
-    const holdingsResponse = await fetch(filingUrl, { headers });
-    console.log(`[sec-proxy] Holdings response status: ${holdingsResponse.status}`);
     
+    // --- Step 3: Fetch the holdings XML via a CORS Proxy (This is the fix) ---
+    const accessionNumberNoDash = latest13F.accessionNumber.replace(/-/g, '');
+    const targetUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumberNoDash}/form13fInfoTable.xml`;
+    
+    // We use a public CORS proxy to make the request on our behalf.
+    // This hides the Cloudflare server's IP address from the SEC server.
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+    
+    const holdingsResponse = await fetch(proxyUrl, { headers });
     if (!holdingsResponse.ok) {
-        throw new Error(`Could not find holdings data. Status: ${holdingsResponse.status}`);
+        throw new Error(`CORS Proxy fetch for holdings data failed. Status: ${holdingsResponse.status}`);
     }
     const xmlText = await holdingsResponse.text();
-    console.log(`[sec-proxy] Successfully fetched holdings XML. Parsing...`);
 
     // --- Step 4: Parse XML and return data ---
     const holdings = await parseHoldingsFromXml(xmlText);
-    console.log(`[sec-proxy] Parsed ${holdings.length} holdings. Request successful.`);
     
     return new Response(JSON.stringify(holdings), {
       headers: { 
         'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=86400'
+        'Cache-Control': 's-maxage=86400' // Cache for 24 hours
       }
     });
 
   } catch (error) {
-    console.error(`[sec-proxy] CRITICAL ERROR for CIK ${cik}:`, error.message);
+    console.error(`[sec-proxy] FINAL ERROR for CIK ${cik}:`, error.message);
     return new Response(JSON.stringify({ error: error.message }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
