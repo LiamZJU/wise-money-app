@@ -298,7 +298,7 @@
             init() {
                 this.renderAll();
                 this.addEventListeners();
-                this.loadInitialNews(); // Load news for the default tab
+                this.loadInitialNews();
             },
 
             renderAll() {
@@ -325,18 +325,15 @@
                 });
             },
 
-            // --- RENDER FUNCTIONS ---
+            // --- RENDER FUNCTIONS (Navbar, Visibility, etc. are unchanged) ---
             renderContent() {
                 const langContent = this.content[this.currentLanguage];
                 document.querySelectorAll('[data-key]').forEach(el => {
                     const key = el.getAttribute('data-key');
-                    if (langContent[key]) {
-                        el.innerHTML = langContent[key];
-                    }
+                    if (langContent[key]) el.innerHTML = langContent[key];
                 });
                 document.documentElement.lang = this.currentLanguage;
             },
-            
             renderLangSwitch() {
                 const container = document.getElementById('lang-switch-container');
                 container.innerHTML = `
@@ -344,7 +341,6 @@
                     <button data-lang="en" class="lang-switch-btn ${this.currentLanguage === 'en' ? 'active' : ''}">EN</button>
                 `;
             },
-
             renderNavbar() {
                 const navContainer = document.getElementById('main-nav');
                 navContainer.innerHTML = '';
@@ -370,7 +366,6 @@
                     navContainer.appendChild(button);
                 });
             },
-
             updateSectionVisibility() {
                 const langContent = this.content[this.currentLanguage];
                 const sectionTitleEl = document.getElementById('section-title');
@@ -384,7 +379,6 @@
                     }
                 });
             },
-
             renderInvestors() {
                 const grid = document.getElementById('investor-grid');
                 grid.innerHTML = '';
@@ -421,110 +415,12 @@
                     btn.addEventListener('click', (e) => this.togglePortfolio(e.currentTarget));
                 });
             },
-            
-            async loadInitialNews() {
-                if (!this.newsData[this.activeNewsPlatform]) {
-                    await this.fetchNewsData(this.activeNewsPlatform);
-                }
-            },
-
-            async handleNewsTabClick(platform) {
-                this.activeNewsPlatform = platform;
-                this.activeNewsFilter = 'latest';
-                this.renderNewsTabs();
-                this.renderNewsFilters();
-                if (!this.newsData[platform]) {
-                   await this.fetchNewsData(platform);
-                } else {
-                   this.renderNewsList();
-                }
-            },
-
-            async fetchNewsData(platform) {
-                if (this.isFetchingNews) return;
-                this.isFetchingNews = true;
-                this.renderNewsList(); // Show loader
-
-                try {
-                    const proxyUrl = `/news-proxy?platform=${platform}`;
-                    const response = await fetch(proxyUrl);
-                    if (!response.ok) throw new Error(`News proxy failed: ${response.status}`);
-                    this.newsData[platform] = await response.json();
-                } catch(error) {
-                    console.error(`Failed to fetch news for ${platform}:`, error);
-                    // In case of error, we can have a fallback
-                    this.newsData[platform] = { latest: [], hottest: [] };
-                } finally {
-                    this.isFetchingNews = false;
-                    this.renderNewsList();
-                }
-            },
-            
-            renderNewsTabs() {
-                const tabsContainer = document.getElementById('news-tabs');
-                tabsContainer.innerHTML = '';
-                const langContent = this.content[this.currentLanguage];
-                const platforms = ['cailian', 'wallstreetcn']; // Xueqiu removed
-
-                platforms.forEach(platformKey => {
-                    const button = document.createElement('button');
-                    button.dataset.platform = platformKey;
-                    button.textContent = langContent.newsPlatforms[platformKey];
-                    button.className = 'tab-btn px-1 pb-2 mx-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-blue-600 focus:outline-none transition-all';
-                    if (platformKey === this.activeNewsPlatform) button.classList.add('active');
-                    button.addEventListener('click', () => this.handleNewsTabClick(platformKey));
-                    tabsContainer.appendChild(button);
-                });
-            },
-            
-            renderNewsFilters() {
-                const contentArea = document.getElementById('news-content-area');
-                let filterContainer = document.getElementById('news-filter-controls');
-                if(filterContainer) filterContainer.remove();
-                
-                filterContainer = document.createElement('div');
-                filterContainer.id = 'news-filter-controls';
-                filterContainer.className = 'flex items-center space-x-2';
-                const langContent = this.content[this.currentLanguage];
-                
-                Object.keys(langContent.newsFilters).forEach(filterKey => {
-                    const button = document.createElement('button');
-                    button.dataset.filter = filterKey;
-                    button.textContent = langContent.newsFilters[filterKey];
-                    button.className = 'news-filter-btn px-3 py-1 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none transition-colors';
-                    if (filterKey === this.activeNewsFilter) button.classList.add('active');
-                    button.addEventListener('click', () => {
-                        this.activeNewsFilter = filterKey;
-                        this.renderNewsFilters();
-                        this.renderNewsList();
-                    });
-                    filterContainer.appendChild(button);
-                });
-                contentArea.prepend(filterContainer);
-            },
-            
-            renderNewsList() {
-                const listContainer = document.getElementById('news-list');
-                if (this.isFetchingNews) {
-                    listContainer.innerHTML = `<div class="flex justify-center items-center p-8"><div class="loader !border-blue-500 !border-b-transparent"></div></div>`;
-                    return;
-                }
-                const platformData = this.newsData[this.activeNewsPlatform];
-                const newsItems = platformData ? platformData[this.activeNewsFilter] : [];
-
-                if (!newsItems || newsItems.length === 0) {
-                    listContainer.innerHTML = `<p class="text-center text-gray-500 py-8">No news available.</p>`;
-                    return;
-                }
-                
-                listContainer.innerHTML = '';
-                newsItems.forEach(item => {
-                    const newsEl = document.createElement('div');
-                    newsEl.className = 'p-4 border-l-4 border-blue-400 bg-blue-50 rounded-r-lg fade-in';
-                    newsEl.innerHTML = `<h4 class="font-semibold text-gray-800">${item.content}</h4><p class="text-sm text-gray-600 mt-1">${item.time}</p>`;
-                    listContainer.appendChild(newsEl);
-                });
-            },
+            async loadInitialNews() { /* ... */ },
+            async handleNewsTabClick(platform) { /* ... */ },
+            async fetchNewsData(platform) { /* ... */ },
+            renderNewsTabs() { /* ... */ },
+            renderNewsFilters() { /* ... */ },
+            renderNewsList() { /* ... */ },
             
             // --- UI LOGIC & DATA FETCHING ---
             toggleLanguage(lang) {
@@ -599,6 +495,7 @@
                 }
             },
 
+            // *** SIMPLIFIED 13F FETCH FUNCTION ***
             async fetch13FHoldings(investor, button) {
                 const langContent = this.content[this.currentLanguage];
                 investor.isFetching = true;
@@ -606,38 +503,16 @@
                 button.insertAdjacentHTML('afterbegin', '<div class="loader"></div>');
 
                 try {
+                    // Only one call to our robust backend proxy
                     const proxyUrl = `/sec-proxy?cik=${investor.filingId}`;
-                    const submissionsResponse = await fetch(proxyUrl);
-                    if (!submissionsResponse.ok) throw new Error(`Proxy fetch failed: ${submissionsResponse.status}`);
-                    const submissionsData = await submissionsResponse.json();
-                    
-                    const recentFilings = submissionsData.filings.recent;
-                    let latest13F = null;
-                    for (let i = 0; i < recentFilings.form.length; i++) {
-                        if (recentFilings.form[i] === '13F-HR') {
-                            latest13F = {
-                                accessionNumber: recentFilings.accessionNumber[i].replace(/-/g, ''),
-                                document: recentFilings.primaryDocument[i],
-                            };
-                            break;
-                        }
+                    const response = await fetch(proxyUrl);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `Proxy failed with status: ${response.status}`);
                     }
-                    if (!latest13F) throw new Error("No recent 13F-HR filing found.");
-
-                    const holdingsUrl = `https://www.sec.gov/Archives/edgar/data/${investor.filingId}/${latest13F.accessionNumber}/${latest13F.document}`;
-                    const holdingsResponse = await fetch(holdingsUrl);
-                     if (!holdingsResponse.ok) throw new Error(`Holdings fetch failed: ${holdingsResponse.status}`);
-                    const xmlText = await holdingsResponse.text();
-
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-                    const infoTableNodes = xmlDoc.getElementsByTagName("infoTable");
                     
-                    investor.data = Array.from(infoTableNodes).map(node => ({
-                        nameOfIssuer: node.querySelector('nameOfIssuer')?.textContent || 'N/A',
-                        value: node.querySelector('value')?.textContent || '0',
-                        sshPrnamt: node.querySelector('shrsOrPrnAmt > sshPrnamt')?.textContent || '0',
-                    }));
+                    const holdings = await response.json();
+                    investor.data = holdings;
                     investor.dataFetched = true;
                 } catch (error) {
                     console.error(`Failed to fetch 13F data for ${investor.name}:`, error);
@@ -658,79 +533,131 @@
             },
 
             renderTradesTable(investor, container) {
-                const langContent = this.content[this.currentLanguage];
-                const trades = investor.data || investor.mockData;
-                const headers = langContent.tradesHeaders;
-
-                if (!trades || trades.length === 0) {
-                    container.innerHTML += `<p class="py-4 text-sm text-gray-500">No recent trades available.</p>`;
-                    return;
-                }
-                
-                let tableHTML = `
-                    <table class="w-full text-sm text-left text-gray-600 my-4">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="py-3 px-4">${headers.date}</th>
-                                <th scope="col" class="py-3 px-4">${headers.asset}</th>
-                                <th scope="col" class="py-3 px-4">${headers.type}</th>
-                                <th scope="col" class="py-3 px-4 text-right">${headers.amount}</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-                trades.forEach(t => {
-                    tableHTML += `
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="py-3 px-4">${t.transaction_date}</td>
-                            <td class="py-3 px-4 font-medium text-gray-900">${t.asset_description} (${t.ticker})</td>
-                            <td class="py-3 px-4">${t.transaction_type}</td>
-                            <td class="py-3 px-4 text-right">${t.amount_range}</td>
-                        </tr>
-                    `;
-                });
-                tableHTML += `</tbody></table>`;
-                
-                const existingTable = container.querySelector('table');
-                if(!existingTable) container.innerHTML += tableHTML;
+                // ... (This function remains unchanged)
             },
-
             renderPortfolioTable(investor, container) {
-                const langContent = this.content[this.currentLanguage];
-                const holdings = investor.data || investor.mockData;
-                const headers = langContent.portfolioHeaders;
-
-                if (!holdings || holdings.length === 0) {
-                    container.innerHTML += `<p class="py-4 text-sm text-gray-500">No holdings information available.</p>`;
-                    return;
-                }
-                
-                let tableHTML = `
-                    <table class="w-full text-sm text-left text-gray-600 my-4">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="py-3 px-4">${headers.stock}</th>
-                                <th scope="col" class="py-3 px-4">${headers.shares}</th>
-                                <th scope="col" class="py-3 px-4 text-right">${headers.value}</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-                holdings.forEach(h => {
-                    tableHTML += `
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="py-3 px-4 font-medium text-gray-900">${h.nameOfIssuer}</td>
-                            <td class="py-3 px-4">${parseInt(h.sshPrnamt).toLocaleString()}</td>
-                            <td class="py-3 px-4 text-right">${parseInt(h.value).toLocaleString()}</td>
-                        </tr>`;
-                });
-                tableHTML += `</tbody></table>`;
-                
-                const existingTable = container.querySelector('table');
-                if(!existingTable) container.innerHTML += tableHTML;
+                // ... (This function remains unchanged)
             }
         };
 
-        // --- RUN APP ---
+        // --- RUN APP (including news functions re-binding) ---
         document.addEventListener('DOMContentLoaded', () => {
+             // Re-bind all news functions as they were removed for brevity in the previous response.
+            Object.assign(app, {
+                loadInitialNews() { if (!this.newsData[this.activeNewsPlatform]) { this.fetchNewsData(this.activeNewsPlatform); } },
+                async handleNewsTabClick(platform) {
+                    this.activeNewsPlatform = platform;
+                    this.activeNewsFilter = 'latest';
+                    this.renderNewsTabs();
+                    this.renderNewsFilters();
+                    if (!this.newsData[platform]) { await this.fetchNewsData(platform); } 
+                    else { this.renderNewsList(); }
+                },
+                async fetchNewsData(platform) {
+                    if (this.isFetchingNews) return;
+                    this.isFetchingNews = true;
+                    this.renderNewsList(); // Show loader
+                    try {
+                        const proxyUrl = `/news-proxy?platform=${platform}`;
+                        const response = await fetch(proxyUrl);
+                        if (!response.ok) throw new Error(`News proxy failed: ${response.status}`);
+                        this.newsData[platform] = await response.json();
+                    } catch(error) {
+                        console.error(`Failed to fetch news for ${platform}:`, error);
+                        this.newsData[platform] = { latest: [], hottest: [] };
+                    } finally {
+                        this.isFetchingNews = false;
+                        this.renderNewsList();
+                    }
+                },
+                renderNewsTabs() {
+                    const tabsContainer = document.getElementById('news-tabs');
+                    tabsContainer.innerHTML = '';
+                    const langContent = this.content[this.currentLanguage];
+                    const platforms = ['cailian', 'wallstreetcn'];
+                    platforms.forEach(platformKey => {
+                        const button = document.createElement('button');
+                        button.dataset.platform = platformKey;
+                        button.textContent = langContent.newsPlatforms[platformKey];
+                        button.className = 'tab-btn px-1 pb-2 mx-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-blue-600 focus:outline-none transition-all';
+                        if (platformKey === this.activeNewsPlatform) button.classList.add('active');
+                        button.addEventListener('click', () => this.handleNewsTabClick(platformKey));
+                        tabsContainer.appendChild(button);
+                    });
+                },
+                renderNewsFilters() {
+                    const contentArea = document.getElementById('news-content-area');
+                    let filterContainer = document.getElementById('news-filter-controls');
+                    if(filterContainer) filterContainer.remove();
+                    filterContainer = document.createElement('div');
+                    filterContainer.id = 'news-filter-controls';
+                    filterContainer.className = 'flex items-center space-x-2';
+                    const langContent = this.content[this.currentLanguage];
+                    Object.keys(langContent.newsFilters).forEach(filterKey => {
+                        const button = document.createElement('button');
+                        button.dataset.filter = filterKey;
+                        button.textContent = langContent.newsFilters[filterKey];
+                        button.className = 'news-filter-btn px-3 py-1 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none transition-colors';
+                        if (filterKey === this.activeNewsFilter) button.classList.add('active');
+                        button.addEventListener('click', () => {
+                            this.activeNewsFilter = filterKey;
+                            this.renderNewsFilters(); this.renderNewsList();
+                        });
+                        filterContainer.appendChild(button);
+                    });
+                    contentArea.prepend(filterContainer);
+                },
+                renderNewsList() {
+                    const listContainer = document.getElementById('news-list');
+                    if (this.isFetchingNews) {
+                        listContainer.innerHTML = `<div class="flex justify-center items-center p-8"><div class="loader !border-blue-500 !border-b-transparent"></div></div>`;
+                        return;
+                    }
+                    const platformData = this.newsData[this.activeNewsPlatform];
+                    const newsItems = platformData ? platformData[this.activeNewsFilter] : [];
+                    if (!newsItems || newsItems.length === 0) {
+                        listContainer.innerHTML = `<p class="text-center text-gray-500 py-8">No news available.</p>`;
+                        return;
+                    }
+                    listContainer.innerHTML = '';
+                    newsItems.forEach(item => {
+                        const newsEl = document.createElement('div');
+                        newsEl.className = 'p-4 border-l-4 border-blue-400 bg-blue-50 rounded-r-lg fade-in';
+                        newsEl.innerHTML = `<h4 class="font-semibold text-gray-800">${item.content}</h4><p class="text-sm text-gray-600 mt-1">${item.time}</p>`;
+                        listContainer.appendChild(newsEl);
+                    });
+                },
+                 renderTradesTable(investor, container) {
+                    const langContent = this.content[this.currentLanguage];
+                    const trades = investor.data || investor.mockData;
+                    const headers = langContent.tradesHeaders;
+                    if (!trades || trades.length === 0) {
+                        container.innerHTML += `<p class="py-4 text-sm text-gray-500">No recent trades available.</p>`;
+                        return;
+                    }
+                    let tableHTML = `<table class="w-full text-sm text-left text-gray-600 my-4"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="py-3 px-4">${headers.date}</th><th scope="col" class="py-3 px-4">${headers.asset}</th><th scope="col" class="py-3 px-4">${headers.type}</th><th scope="col" class="py-3 px-4 text-right">${headers.amount}</th></tr></thead><tbody>`;
+                    trades.forEach(t => {
+                        tableHTML += `<tr class="bg-white border-b hover:bg-gray-50"><td class="py-3 px-4">${t.transaction_date}</td><td class="py-3 px-4 font-medium text-gray-900">${t.asset_description} (${t.ticker})</td><td class="py-3 px-4">${t.transaction_type}</td><td class="py-3 px-4 text-right">${t.amount_range}</td></tr>`;
+                    });
+                    tableHTML += `</tbody></table>`;
+                    if(!container.querySelector('table')) container.innerHTML += tableHTML;
+                },
+                renderPortfolioTable(investor, container) {
+                    const langContent = this.content[this.currentLanguage];
+                    const holdings = investor.data || investor.mockData;
+                    const headers = langContent.portfolioHeaders;
+                    if (!holdings || holdings.length === 0) {
+                        container.innerHTML += `<p class="py-4 text-sm text-gray-500">No holdings information available.</p>`;
+                        return;
+                    }
+                    let tableHTML = `<table class="w-full text-sm text-left text-gray-600 my-4"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="py-3 px-4">${headers.stock}</th><th scope="col" class="py-3 px-4">${headers.shares}</th><th scope="col" class="py-3 px-4 text-right">${headers.value}</th></tr></thead><tbody>`;
+                    holdings.forEach(h => {
+                        tableHTML += `<tr class="bg-white border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium text-gray-900">${h.nameOfIssuer}</td><td class="py-3 px-4">${parseInt(h.sshPrnamt || 0).toLocaleString()}</td><td class="py-3 px-4 text-right">${parseInt(h.value || 0).toLocaleString()}</td></tr>`;
+                    });
+                    tableHTML += `</tbody></table>`;
+                    if(!container.querySelector('table')) container.innerHTML += tableHTML;
+                }
+            });
             app.init();
         });
     </script>
