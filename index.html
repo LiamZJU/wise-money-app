@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa; /* A very light grey, almost white */
+            background-color: #f8f9fa;
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
@@ -38,23 +38,21 @@
         .content-section {
             display: none;
         }
-        /* Sidebar Nav styles */
         #main-nav button {
-            color: #4b5563; /* Gray-600 */
+            color: #4b5563;
             transition: background-color 0.2s, color 0.2s;
         }
         #main-nav button.active {
-            background-color: #eef2ff; /* Indigo-100 */
-            color: #3b82f6; /* Blue-500 */
+            background-color: #eef2ff;
+            color: #3b82f6;
             font-weight: 600;
         }
-        /* Investor Card styles */
         .investor-card {
-            border: 1px solid #e5e7eb; /* Gray-200 */
+            border: 1px solid #e5e7eb;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         .investor-card:hover {
-            border-color: #3b82f6; /* Blue-500 */
+            border-color: #3b82f6;
             box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.1);
         }
         .investor-avatar {
@@ -64,23 +62,22 @@
             align-items: center;
             justify-content: center;
             border-radius: 9999px;
-            background-color: #e0e7ff; /* Indigo-200 */
-            color: #3730a3; /* Indigo-800 */
+            background-color: #e0e7ff;
+            color: #3730a3;
             font-weight: 600;
             font-size: 14px;
         }
         .info-tag {
-            background-color: #e0f2fe; /* Sky-100 */
-            color: #0ea5e9; /* Sky-500 */
+            background-color: #e0f2fe;
+            color: #0ea5e9;
             font-size: 12px;
             font-weight: 500;
             padding: 2px 8px;
             border-radius: 9999px;
         }
-        /* Language Switch styles */
         .lang-switch-container {
             display: inline-flex;
-            background-color: #e5e7eb; /* gray-200 */
+            background-color: #e5e7eb;
             border-radius: 9999px;
             padding: 4px;
         }
@@ -89,16 +86,15 @@
             padding: 4px 16px;
             font-size: 14px;
             font-weight: 600;
-            color: #4b5563; /* gray-600 */
+            color: #4b5563;
             border-radius: 9999px;
             transition: background-color 0.3s, color 0.3s;
         }
         .lang-switch-btn.active {
-            background-color: #3b82f6; /* blue-500 */
+            background-color: #3b82f6;
             color: white;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
-        /* Loading Spinner */
         .loader {
             width: 16px;
             height: 16px;
@@ -118,70 +114,53 @@
 <body class="bg-gray-50 text-gray-800">
 
     <div class="md:flex h-screen">
-        <!-- Left-side Navigation Bar / 左侧导航栏 -->
         <aside class="w-full md:w-64 bg-white md:border-r md:border-gray-200 p-4 flex-shrink-0">
             <div class="flex items-center gap-3 mb-8">
-                <!-- New Logo SVG -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
                 <h1 class="text-2xl font-bold text-gray-900" data-key="mainTitle">聪明钱</h1>
             </div>
             <nav id="main-nav" class="flex md:flex-col gap-2">
-                <!-- Nav buttons will be injected here by JS -->
             </nav>
         </aside>
 
         <div class="flex-1 overflow-y-auto">
             <div id="app" class="p-4 md:p-8">
-                <!-- Header / 头部 -->
                 <header class="flex justify-between items-center mb-8">
                     <h2 id="section-title" class="text-2xl font-bold text-gray-900"></h2>
                     <div id="lang-switch-container" class="lang-switch-container">
-                        <!-- Language switch buttons will be injected here by JS -->
                     </div>
                 </header>
                 
                 <main>
-                    <!-- Investors Section / 投资者持仓 -->
                     <section id="investors-section" class="content-section">
                         <div id="investor-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                            <!-- Investor cards will be injected here by JS -->
                         </div>
                     </section>
-
-                    <!-- News Section / 财经平台信息 -->
                     <section id="news-section" class="content-section">
                         <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200">
                             <div id="news-tabs" class="flex flex-wrap border-b border-gray-200 mb-4">
-                                <!-- Tab buttons will be injected here by JS -->
                             </div>
                             <div id="news-content-area">
-                                <!-- Filter buttons will be injected here by JS -->
                                 <div id="news-list" class="mt-4 space-y-4">
-                                    <!-- News items will be injected here by JS -->
                                 </div>
                             </div>
                         </div>
                     </section>
-
-                    <!-- Data Sources Section / 信息来源 -->
                     <section id="sources-section" class="content-section">
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-6">
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-800" data-key="investorSourcesTitle">投资者持仓数据</h3>
-                                <p class="mt-2 text-gray-600 leading-relaxed" data-key="investorSourcesDesc">
-                                </p>
+                                <h3 class="text-lg font-semibold text-gray-800" data-key="investorSourcesTitle"></h3>
+                                <p class="mt-2 text-gray-600 leading-relaxed" data-key="investorSourcesDesc"></p>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-800" data-key="platformSourcesTitle">财经平台信息</h3>
-                                <p class="mt-2 text-gray-600 leading-relaxed" data-key="platformSourcesDesc">
-                                </p>
+                                <h3 class="text-lg font-semibold text-gray-800" data-key="platformSourcesTitle"></h3>
+                                <p class="mt-2 text-gray-600 leading-relaxed" data-key="platformSourcesDesc"></p>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-800" data-key="disclaimerTitle">免责声明</h3>
-                                <p class="mt-2 text-gray-600 leading-relaxed" data-key="disclaimerDesc">
-                                </p>
+                                <h3 class="text-lg font-semibold text-gray-800" data-key="disclaimerTitle"></h3>
+                                <p class="mt-2 text-gray-600 leading-relaxed" data-key="disclaimerDesc"></p>
                             </div>
                         </div>
                     </section>
@@ -192,374 +171,65 @@
 
     <script>
         const app = {
-            // --- STATE ---
-            currentLanguage: 'en', // Default language set to English
+            currentLanguage: 'en',
             activeSection: 'investors',
             activeNewsPlatform: 'cailian',
             activeNewsFilter: 'latest',
-            newsData: {}, // To cache fetched news data
+            newsData: {},
             isFetchingNews: false,
-
-            // --- CONTENT DATA ---
             content: {
                 zh: {
-                    siteTitle: "聪明钱 | Wise Money",
-                    mainTitle: "聪明钱",
-                    navLinks: {
-                        investors: '知名投资者',
-                        news: '财经平台',
-                        sources: '方法论'
-                    },
-                    investorSourcesTitle: "投资者持仓数据",
-                    investorSourcesDesc: "本网站展示的机构投资者（如巴菲特、凯西·伍德、迈克尔·贝里、李录、乔治·索罗斯）持仓信息主要来源于美国证券交易委员会(SEC)公开的13F季度报告。国会议员（如南希·佩洛西）的交易数据来源于依据《STOCK Act》进行的公开申报。部分非强制申报的投资者（如段永平）的持仓信息是根据其在社交媒体、公开访谈等渠道的言论整理而来，可能存在不完整或延迟，仅供参考。所有持仓数据均有明确的报告日期。",
-                    platformSourcesTitle: "财经平台信息",
-                    platformSourcesDesc: "财经平台（财联社、华尔街见闻）的信息通过模拟其官方API或RSS订阅源获取，旨在展示信息聚合功能。我们展示的信息类型主要包括：<br>- <strong>财联社</strong>：实时金融快讯、市场异动、政策解读。<br>- <strong>华尔街见闻</strong>：全球宏观经济分析、深度市场观察、大类资产动态。<br>本站仅为信息展示，所有资讯的最终解释权归原平台所有。",
-                    disclaimerTitle: "免责声明",
-                    disclaimerDesc: "本网站所有数据和信息仅供参考，不构成任何投资建议。市场有风险，投资需谨慎。请在做出任何投资决策前进行独立的调查和判断。",
-                    portfolioHeaders: { stock: '股票', value: '市值 (x$1000)', shares: '股数' },
-                    tradesHeaders: { date: '交易日期', asset: '资产', type: '类型', amount: '金额' },
-                    filingIdPrefix: 'CIK:',
-                    stockActIdPrefix: '申报人:',
-                    tag13F: "13F 文件",
-                    tagStockAct: "STOCK Act",
-                    viewPortfolio: "查看持仓",
-                    hidePortfolio: "隐藏持仓",
-                    viewTrades: "查看交易",
-                    hideTrades: "隐藏交易",
-                    fetchingData: "正在加载...",
-                    fetchFailed: "加载失败, 显示模拟数据。",
-                    newsFilters: { latest: '最新', hottest: '最热' },
-                    newsPlatforms: { cailian: '财联社', wallstreetcn: '华尔街见闻' },
+                    siteTitle: "聪明钱 | Wise Money", mainTitle: "聪明钱", navLinks: { investors: '知名投资者', news: '财经平台', sources: '方法论' },
+                    investorSourcesTitle: "投资者持仓数据", investorSourcesDesc: "本网站展示的机构投资者（如巴菲特、凯西·伍德、迈克尔·贝里、李录、乔治·索罗斯）持仓信息主要来源于美国证券交易委员会(SEC)公开的13F季度报告。国会议员（如南希·佩洛西）的交易数据来源于依据《STOCK Act》进行的公开申报。部分非强制申报的投资者（如段永平）的持仓信息是根据其在社交媒体、公开访谈等渠道的言论整理而来，可能存在不完整或延迟，仅供参考。所有持仓数据均有明确的报告日期。",
+                    platformSourcesTitle: "财经平台信息", platformSourcesDesc: "财经平台（财联社、华尔街见闻）的信息通过模拟其官方API或RSS订阅源获取，旨在展示信息聚合功能。我们展示的信息类型主要包括：<br>- <strong>财联社</strong>：实时金融快讯、市场异动、政策解读。<br>- <strong>华尔街见闻</strong>：全球宏观经济分析、深度市场观察、大类资产动态。<br>本站仅为信息展示，所有资讯的最终解释权归原平台所有。",
+                    disclaimerTitle: "免责声明", disclaimerDesc: "本网站所有数据和信息仅供参考，不构成任何投资建议。市场有风险，投资需谨慎。请在做出任何投资决策前进行独立的调查和判断。",
+                    portfolioHeaders: { stock: '股票', value: '市值 (x$1000)', shares: '股数' }, tradesHeaders: { date: '交易日期', asset: '资产', type: '类型', amount: '金额' },
+                    filingIdPrefix: 'CIK:', stockActIdPrefix: '申报人:', tag13F: "13F 文件", tagStockAct: "STOCK Act", viewPortfolio: "查看持仓", hidePortfolio: "隐藏持仓", viewTrades: "查看交易", hideTrades: "隐藏交易",
+                    fetchingData: "正在加载...", fetchFailed: "加载失败, 显示模拟数据。", fetchFailedWithReason: "加载失败: ", newsFilters: { latest: '最新', hottest: '最热' }, newsPlatforms: { cailian: '财联社', wallstreetcn: '华尔街见闻' },
                 },
                 en: {
-                    siteTitle: "Wise Money | 聪明钱",
-                    mainTitle: "Wise Money",
-                    navLinks: {
-                        investors: 'Top Investors',
-                        news: 'Platform Feeds',
-                        sources: 'Methodology'
-                    },
-                    investorSourcesTitle: "Investor Portfolio Data",
-                    investorSourcesDesc: "Portfolio information for institutional investors (e.g., Buffett, Cathie Wood, Michael Burry, Li Lu, George Soros) is primarily sourced from public 13F quarterly reports filed with the U.S. Securities and Exchange Commission (SEC). Trading data for members of Congress (e.g., Nancy Pelosi) is from public disclosures under the STOCK Act. Holdings of certain investors without mandatory filing requirements (e.g., Duan Yongping) are compiled from public statements on social media and interviews, which may be incomplete or delayed and are for reference only. All portfolio data has a clear reporting date.",
-                    platformSourcesTitle: "Financial Platform Information",
-                    platformSourcesDesc: "Information from financial platforms (Cailian Press, Wallstreetcn) is obtained by simulating their official APIs or RSS feeds to demonstrate data aggregation capabilities. The types of information we display include:<br>- <strong>Cailian Press</strong>: Real-time financial news flashes, market anomalies, policy analysis.<br>- <strong>Wallstreetcn</strong>: Global macroeconomic analysis, in-depth market observations, cross-asset dynamics.<br>This site is for information display only; the final interpretation of all news belongs to the original platform.",
-                    disclaimerTitle: "Disclaimer",
-                    disclaimerDesc: "All data and information on this website are for reference only and do not constitute any investment advice. The market is risky, and investment should be cautious. Please conduct independent research and judgment before making any investment decisions.",
-                    portfolioHeaders: { stock: 'Stock', value: 'Value (x$1000)', shares: 'Shares' },
-                    tradesHeaders: { date: 'Date', asset: 'Asset', type: 'Type', amount: 'Amount Range' },
-                    filingIdPrefix: 'CIK:',
-                    stockActIdPrefix: 'Filer:',
-                    tag13F: "13F Filing",
-                    tagStockAct: "STOCK Act",
-                    viewPortfolio: "View Holdings",
-                    hidePortfolio: "Hide Holdings",
-                    viewTrades: "View Trades",
-                    hideTrades: "Hide Trades",
-                    fetchingData: "Fetching...",
-                    fetchFailed: "Fetch failed, showing mock data.",
-                    fetchFailedWithReason: "Fetch failed: ",
-                    newsFilters: { latest: 'Latest', hottest: 'Hottest' },
-                    newsPlatforms: { cailian: 'Cailian', wallstreetcn: 'Wallstreetcn' },
+                    siteTitle: "Wise Money | 聪明钱", mainTitle: "Wise Money", navLinks: { investors: 'Top Investors', news: 'Platform Feeds', sources: 'Methodology' },
+                    investorSourcesTitle: "Investor Portfolio Data", investorSourcesDesc: "Portfolio information for institutional investors (e.g., Buffett, Cathie Wood, Michael Burry, Li Lu, George Soros) is primarily sourced from public 13F quarterly reports filed with the U.S. Securities and Exchange Commission (SEC). Trading data for members of Congress (e.g., Nancy Pelosi) is from public disclosures under the STOCK Act. Holdings of certain investors without mandatory filing requirements (e.g., Duan Yongping) are compiled from public statements on social media and interviews, which may be incomplete or delayed and are for reference only. All portfolio data has a clear reporting date.",
+                    platformSourcesTitle: "Financial Platform Information", platformSourcesDesc: "Information from financial platforms (Cailian Press, Wallstreetcn) is obtained by simulating their official APIs or RSS feeds to demonstrate data aggregation capabilities. The types of information we display include:<br>- <strong>Cailian Press</strong>: Real-time financial news flashes, market anomalies, policy analysis.<br>- <strong>Wallstreetcn</strong>: Global macroeconomic analysis, in-depth market observations, cross-asset dynamics.<br>This site is for information display only; the final interpretation of all news belongs to the original platform.",
+                    disclaimerTitle: "Disclaimer", disclaimerDesc: "All data and information on this website are for reference only and do not constitute any investment advice. The market is risky, and investment should be cautious. Please conduct independent research and judgment before making any investment decisions.",
+                    portfolioHeaders: { stock: 'Stock', value: 'Value (x$1000)', shares: 'Shares' }, tradesHeaders: { date: 'Date', asset: 'Asset', type: 'Type', amount: 'Amount Range' },
+                    filingIdPrefix: 'CIK:', stockActIdPrefix: 'Filer:', tag13F: "13F Filing", tagStockAct: "STOCK Act", viewPortfolio: "View Holdings", hidePortfolio: "Hide Holdings", viewTrades: "View Trades", hideTrades: "Hide Trades",
+                    fetchingData: "Fetching...", fetchFailed: "Fetch failed, showing mock data.", fetchFailedWithReason: "Fetch failed: ", newsFilters: { latest: 'Latest', hottest: 'Hottest' }, newsPlatforms: { cailian: 'Cailian', wallstreetcn: 'Wallstreetcn' },
                 }
             },
-
-            // --- DATA ---
             investorData: [
-                { id: 'buffett', name: '沃伦·巴菲特', enName: 'Warren Buffett', initials: 'WB', firm: 'Berkshire Hathaway', filingId: '1067983', tagType: '13F', isFetching: false, dataFetched: false, mockData: [
-                    { nameOfIssuer: 'Apple Inc.', value: '174300000', sshPrnamt: '907555700' },
-                    { nameOfIssuer: 'Bank of America', value: '39200000', sshPrnamt: '1032852006' }
-                ]},
-                { id: 'wood', name: '凯西·伍德', enName: 'Cathie Wood', initials: 'CW', firm: 'ARK Investment Management', filingId: '1696996', tagType: '13F', isFetching: false, dataFetched: false, mockData: [
-                    { nameOfIssuer: 'Tesla, Inc.', value: '1050000', sshPrnamt: '5800000' },
-                    { nameOfIssuer: 'Coinbase Global', value: '2100000', sshPrnamt: '8300000' }
-                ]},
-                { id: 'burry', name: '迈克尔·贝里', enName: 'Michael Burry', initials: 'MB', firm: 'Scion Asset Management', filingId: '1606198', tagType: '13F', isFetching: false, dataFetched: false, mockData: [
-                     { nameOfIssuer: 'JD.com', value: '10100', sshPrnamt: '360000' },
-                     { nameOfIssuer: 'Alibaba', value: '3700', sshPrnamt: '50000' }
-                ]},
-                { id: 'pelosi', name: '南希·佩洛西', enName: 'Nancy Pelosi', initials: 'NP', firm: 'U.S. Congress Member', filingId: 'PELOSI, NANCY', tagType: 'StockAct', isFetching: false, dataFetched: false, mockData: [
-                    { transaction_date: "2024-05-24", ticker: "NVDA", asset_description: "NVIDIA Corporation - Call Options", transaction_type: "Purchase", amount_range: "$1,000,001 - $5,000,000" },
-                    { transaction_date: "2024-05-15", ticker: "MSFT", asset_description: "Microsoft Corporation", transaction_type: "Purchase", amount_range: "$250,001 - $500,000" }
-                ]},
-                { id: 'soros', name: '乔治·索罗斯', enName: 'George Soros', initials: 'GS', firm: 'Soros Fund Management', filingId: '1029160', tagType: '13F', isFetching: false, dataFetched: false, mockData: [
-                    { nameOfIssuer: 'Alphabet Inc.', value: '220000', sshPrnamt: '1600000' },
-                    { nameOfIssuer: 'Amazon.com, Inc.', value: '77000', sshPrnamt: '430000' }
-                ]},
-                { id: 'li', name: '李录', enName: 'Li Lu', initials: 'LL', firm: 'Himalaya Capital', filingId: '1656829', tagType: '13F', isFetching: false, dataFetched: false, mockData: [
-                    { nameOfIssuer: 'Bank of America', value: '368000', sshPrnamt: '9700000' },
-                    { nameOfIssuer: 'Micron Technology', value: '970000', sshPrnamt: '7900000' }
-                ]},
-                { id: 'duan', name: '段永平', enName: 'Yongping Duan', initials: 'YD', firm: 'H&H International Investment LLC', filingId: '1759760', tagType: '13F', isFetching: false, dataFetched: false, mockData: [
-                    { nameOfIssuer: 'Apple Inc.', value: 'N/A', sshPrnamt: 'N/A' },
-                    { nameOfIssuer: 'Tencent Holdings', value: 'N/A', sshPrnamt: 'N/A' }
-                ]},
+                { id: 'buffett', name: '沃伦·巴菲特', enName: 'Warren Buffett', initials: 'WB', firm: 'Berkshire Hathaway', filingId: '1067983', tagType: '13F', isFetching: false, dataFetched: false, mockData: [{ nameOfIssuer: 'Apple Inc.', value: '174300000', sshPrnamt: '907555700' }, { nameOfIssuer: 'Bank of America', value: '39200000', sshPrnamt: '1032852006' }] },
+                // *** CIK UPDATED to the correct, newer one for ARK ***
+                { id: 'wood', name: '凯西·伍德', enName: 'Cathie Wood', initials: 'CW', firm: 'ARK Investment Management', filingId: '1839626', tagType: '13F', isFetching: false, dataFetched: false, mockData: [{ nameOfIssuer: 'Tesla, Inc.', value: '1050000', sshPrnamt: '5800000' }, { nameOfIssuer: 'Coinbase Global', value: '2100000', sshPrnamt: '8300000' }] },
+                { id: 'burry', name: '迈克尔·贝里', enName: 'Michael Burry', initials: 'MB', firm: 'Scion Asset Management', filingId: '1606198', tagType: '13F', isFetching: false, dataFetched: false, mockData: [{ nameOfIssuer: 'JD.com', value: '10100', sshPrnamt: '360000' }, { nameOfIssuer: 'Alibaba', value: '3700', sshPrnamt: '50000' }] },
+                { id: 'pelosi', name: '南希·佩洛西', enName: 'Nancy Pelosi', initials: 'NP', firm: 'U.S. Congress Member', filingId: 'PELOSI, NANCY', tagType: 'StockAct', isFetching: false, dataFetched: false, mockData: [{ transaction_date: "2024-05-24", ticker: "NVDA", asset_description: "NVIDIA Corporation - Call Options", transaction_type: "Purchase", amount_range: "$1,000,001 - $5,000,000" }, { transaction_date: "2024-05-15", ticker: "MSFT", asset_description: "Microsoft Corporation", transaction_type: "Purchase", amount_range: "$250,001 - $500,000" }] },
+                { id: 'soros', name: '乔治·索罗斯', enName: 'George Soros', initials: 'GS', firm: 'Soros Fund Management', filingId: '1029160', tagType: '13F', isFetching: false, dataFetched: false, mockData: [{ nameOfIssuer: 'Alphabet Inc.', value: '220000', sshPrnamt: '1600000' }, { nameOfIssuer: 'Amazon.com, Inc.', value: '77000', sshPrnamt: '430000' }] },
+                { id: 'li', name: '李录', enName: 'Li Lu', initials: 'LL', firm: 'Himalaya Capital', filingId: '1656829', tagType: '13F', isFetching: false, dataFetched: false, mockData: [{ nameOfIssuer: 'Bank of America', value: '368000', sshPrnamt: '9700000' }, { nameOfIssuer: 'Micron Technology', value: '970000', sshPrnamt: '7900000' }] },
+                { id: 'duan', name: '段永平', enName: 'Yongping Duan', initials: 'YD', firm: 'H&H International Investment LLC', filingId: '1759760', tagType: '13F', isFetching: false, dataFetched: false, mockData: [{ nameOfIssuer: 'Apple Inc.', value: 'N/A', sshPrnamt: 'N/A' }, { nameOfIssuer: 'Tencent Holdings', value: 'N/A', sshPrnamt: 'N/A' }] },
             ],
             
-            // --- INITIALIZATION ---
-            init() {
-                this.renderAll();
-                this.addEventListeners();
-                this.loadInitialNews();
-            },
-
-            renderAll() {
-                this.renderContent();
-                this.renderLangSwitch();
-                this.renderNavbar();
-                this.updateSectionVisibility();
-                this.renderInvestors();
-                this.renderNewsTabs();
-                this.renderNewsFilters();
-                this.renderNewsList();
-            },
-            
-            // --- EVENT LISTENERS ---
-            addEventListeners() {
-                document.getElementById('lang-switch-container').addEventListener('click', (e) => {
-                    const target = e.target.closest('.lang-switch-btn');
-                    if (target) {
-                        const lang = target.dataset.lang;
-                        if (lang && lang !== this.currentLanguage) {
-                            this.toggleLanguage(lang);
-                        }
-                    }
-                });
-            },
-
-            // --- RENDER FUNCTIONS (Navbar, Visibility, etc. are unchanged) ---
-            renderContent() {
-                const langContent = this.content[this.currentLanguage];
-                document.querySelectorAll('[data-key]').forEach(el => {
-                    const key = el.getAttribute('data-key');
-                    if (langContent[key]) el.innerHTML = langContent[key];
-                });
-                document.documentElement.lang = this.currentLanguage;
-            },
-            renderLangSwitch() {
-                const container = document.getElementById('lang-switch-container');
-                container.innerHTML = `
-                    <button data-lang="zh" class="lang-switch-btn ${this.currentLanguage === 'zh' ? 'active' : ''}">CN</button>
-                    <button data-lang="en" class="lang-switch-btn ${this.currentLanguage === 'en' ? 'active' : ''}">EN</button>
-                `;
-            },
-            renderNavbar() {
-                const navContainer = document.getElementById('main-nav');
-                navContainer.innerHTML = '';
-                const langContent = this.content[this.currentLanguage];
-                const navLinks = langContent.navLinks;
-                const icons = {
-                    investors: `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
-                    news: `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6M7 8h6" /></svg>`,
-                    sources: `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
-                };
-                Object.keys(navLinks).forEach(sectionKey => {
-                    const button = document.createElement('button');
-                    button.dataset.section = sectionKey;
-                    button.className = 'w-full px-3 py-3 flex items-center gap-3 text-sm font-medium rounded-lg hover:bg-gray-100 focus:outline-none transition-colors duration-200';
-                    button.innerHTML = `${icons[sectionKey] || ''}<span>${navLinks[sectionKey]}</span>`;
-                    if (sectionKey === this.activeSection) button.classList.add('active');
-                    button.addEventListener('click', () => {
-                        this.activeSection = sectionKey;
-                        this.renderNavbar();
-                        this.updateSectionVisibility();
-                        if (sectionKey === 'news') this.loadInitialNews();
-                    });
-                    navContainer.appendChild(button);
-                });
-            },
-            updateSectionVisibility() {
-                const langContent = this.content[this.currentLanguage];
-                const sectionTitleEl = document.getElementById('section-title');
-                document.querySelectorAll('.content-section').forEach(sectionEl => {
-                    if (sectionEl.id === `${this.activeSection}-section`) {
-                        sectionEl.style.display = 'block';
-                        sectionEl.classList.add('fade-in');
-                        sectionTitleEl.textContent = langContent.navLinks[this.activeSection];
-                    } else {
-                        sectionEl.style.display = 'none';
-                    }
-                });
-            },
-            renderInvestors() {
-                const grid = document.getElementById('investor-grid');
-                grid.innerHTML = '';
-                const langContent = this.content[this.currentLanguage];
-                this.investorData.forEach(investor => {
-                    const name = this.currentLanguage === 'zh' ? investor.name : investor.enName;
-                    const tagKey = investor.tagType === '13F' ? 'tag13F' : (investor.tagType === 'StockAct' ? 'tagStockAct' : null);
-                    const tagText = tagKey ? langContent[tagKey] : '';
-                    let filingIdText = '';
-                    if (investor.filingId) {
-                        const prefixKey = investor.tagType === '13F' ? 'filingIdPrefix' : 'stockActIdPrefix';
-                        filingIdText = `<p class="text-xs text-gray-400">${langContent[prefixKey]} ${investor.filingId}</p>`;
-                    }
-                    const buttonTextKey = investor.tagType === '13F' ? 'viewPortfolio' : 'viewTrades';
-
-                    const card = document.createElement('div');
-                    card.className = 'investor-card bg-white rounded-xl shadow-sm overflow-hidden';
-                    card.innerHTML = `
-                        <div class="p-5">
-                            <div class="flex items-start justify-between"><div class="flex items-center gap-4"><div class="investor-avatar">${investor.initials}</div><div><h3 class="text-base font-bold text-gray-900">${name}</h3><p class="text-sm text-gray-500">${investor.firm}</p></div></div></div>
-                            <div class="mt-4 flex items-center justify-between min-h-[20px]">${filingIdText || '<div></div>'}${tagText ? `<div class="info-tag">${tagText}</div>` : ''}</div>
-                        </div>
-                        <div class="px-5 pb-5">
-                             <button data-investor-id="${investor.id}" class="investor-toggle-btn w-full text-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center gap-2">
-                                <span>${langContent[buttonTextKey]}</span>
-                            </button>
-                        </div>
-                        <div id="portfolio-${investor.id}" class="portfolio-details bg-gray-50 px-5"></div>
-                    `;
-                    grid.appendChild(card);
-                });
-
-                document.querySelectorAll('.investor-toggle-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => this.togglePortfolio(e.currentTarget));
-                });
-            },
-            async loadInitialNews() { if (!this.newsData[this.activeNewsPlatform]) { this.fetchNewsData(this.activeNewsPlatform); } },
+            init() { this.renderAll(); this.addEventListeners(); this.loadInitialNews(); },
+            renderAll() { this.renderContent(); this.renderLangSwitch(); this.renderNavbar(); this.updateSectionVisibility(); this.renderInvestors(); this.renderNewsTabs(); this.renderNewsFilters(); this.renderNewsList(); },
+            addEventListeners() { document.getElementById('lang-switch-container').addEventListener('click', (e) => { const target = e.target.closest('.lang-switch-btn'); if (target) { const lang = target.dataset.lang; if (lang && lang !== this.currentLanguage) this.toggleLanguage(lang); } }); },
+            renderContent() { const langContent = this.content[this.currentLanguage]; document.querySelectorAll('[data-key]').forEach(el => { const key = el.getAttribute('data-key'); if (langContent[key]) el.innerHTML = langContent[key]; }); document.documentElement.lang = this.currentLanguage; },
+            renderLangSwitch() { const container = document.getElementById('lang-switch-container'); container.innerHTML = `<button data-lang="zh" class="lang-switch-btn ${this.currentLanguage === 'zh' ? 'active' : ''}">CN</button><button data-lang="en" class="lang-switch-btn ${this.currentLanguage === 'en' ? 'active' : ''}">EN</button>`; },
+            renderNavbar() { const navContainer = document.getElementById('main-nav'); navContainer.innerHTML = ''; const langContent = this.content[this.currentLanguage]; const navLinks = langContent.navLinks; const icons = { investors: `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`, news: `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6M7 8h6" /></svg>`, sources: `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`, }; Object.keys(navLinks).forEach(sectionKey => { const button = document.createElement('button'); button.dataset.section = sectionKey; button.className = 'w-full px-3 py-3 flex items-center gap-3 text-sm font-medium rounded-lg hover:bg-gray-100 focus:outline-none transition-colors duration-200'; button.innerHTML = `${icons[sectionKey] || ''}<span>${navLinks[sectionKey]}</span>`; if (sectionKey === this.activeSection) button.classList.add('active'); button.addEventListener('click', () => { this.activeSection = sectionKey; this.renderNavbar(); this.updateSectionVisibility(); if (sectionKey === 'news') this.loadInitialNews(); }); navContainer.appendChild(button); }); },
+            updateSectionVisibility() { const langContent = this.content[this.currentLanguage]; const sectionTitleEl = document.getElementById('section-title'); document.querySelectorAll('.content-section').forEach(sectionEl => { if (sectionEl.id === `${this.activeSection}-section`) { sectionEl.style.display = 'block'; sectionEl.classList.add('fade-in'); sectionTitleEl.textContent = langContent.navLinks[this.activeSection]; } else { sectionEl.style.display = 'none'; } }); },
+            renderInvestors() { const grid = document.getElementById('investor-grid'); grid.innerHTML = ''; const langContent = this.content[this.currentLanguage]; this.investorData.forEach(investor => { const name = this.currentLanguage === 'zh' ? investor.name : investor.enName; const tagKey = investor.tagType === '13F' ? 'tag13F' : (investor.tagType === 'StockAct' ? 'tagStockAct' : null); const tagText = tagKey ? langContent[tagKey] : ''; let filingIdText = ''; if (investor.filingId) { const prefixKey = investor.tagType === '13F' ? 'filingIdPrefix' : 'stockActIdPrefix'; filingIdText = `<p class="text-xs text-gray-400">${langContent[prefixKey]} ${investor.filingId}</p>`; } const buttonTextKey = investor.tagType === '13F' ? 'viewPortfolio' : 'viewTrades'; const card = document.createElement('div'); card.className = 'investor-card bg-white rounded-xl shadow-sm overflow-hidden'; card.innerHTML = `<div class="p-5"><div class="flex items-start justify-between"><div class="flex items-center gap-4"><div class="investor-avatar">${investor.initials}</div><div><h3 class="text-base font-bold text-gray-900">${name}</h3><p class="text-sm text-gray-500">${investor.firm}</p></div></div></div><div class="mt-4 flex items-center justify-between min-h-[20px]">${filingIdText || '<div></div>'}${tagText ? `<div class="info-tag">${tagText}</div>` : ''}</div></div><div class="px-5 pb-5"><button data-investor-id="${investor.id}" class="investor-toggle-btn w-full text-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center justify-center gap-2"><span>${langContent[buttonTextKey]}</span></button></div><div id="portfolio-${investor.id}" class="portfolio-details bg-gray-50 px-5"></div>`; grid.appendChild(card); }); document.querySelectorAll('.investor-toggle-btn').forEach(btn => { btn.addEventListener('click', (e) => this.togglePortfolio(e.currentTarget)); }); },
+            async loadInitialNews() { if (!this.newsData[this.activeNewsPlatform]) { await this.fetchNewsData(this.activeNewsPlatform); } },
             async handleNewsTabClick(platform) { this.activeNewsPlatform = platform; this.activeNewsFilter = 'latest'; this.renderNewsTabs(); this.renderNewsFilters(); if (!this.newsData[platform]) { await this.fetchNewsData(platform); } else { this.renderNewsList(); } },
             async fetchNewsData(platform) { if (this.isFetchingNews) return; this.isFetchingNews = true; this.renderNewsList(); try { const proxyUrl = `/news-proxy?platform=${platform}`; const response = await fetch(proxyUrl); if (!response.ok) throw new Error(`News proxy failed: ${response.status}`); this.newsData[platform] = await response.json(); } catch(error) { console.error(`Failed to fetch news for ${platform}:`, error); this.newsData[platform] = { latest: [], hottest: [] }; } finally { this.isFetchingNews = false; this.renderNewsList(); } },
             renderNewsTabs() { const tabsContainer = document.getElementById('news-tabs'); tabsContainer.innerHTML = ''; const langContent = this.content[this.currentLanguage]; const platforms = ['cailian', 'wallstreetcn']; platforms.forEach(platformKey => { const button = document.createElement('button'); button.dataset.platform = platformKey; button.textContent = langContent.newsPlatforms[platformKey]; button.className = 'tab-btn px-1 pb-2 mx-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-blue-600 focus:outline-none transition-all'; if (platformKey === this.activeNewsPlatform) button.classList.add('active'); button.addEventListener('click', () => this.handleNewsTabClick(platformKey)); tabsContainer.appendChild(button); }); },
             renderNewsFilters() { const contentArea = document.getElementById('news-content-area'); let filterContainer = document.getElementById('news-filter-controls'); if(filterContainer) filterContainer.remove(); filterContainer = document.createElement('div'); filterContainer.id = 'news-filter-controls'; filterContainer.className = 'flex items-center space-x-2'; const langContent = this.content[this.currentLanguage]; Object.keys(langContent.newsFilters).forEach(filterKey => { const button = document.createElement('button'); button.dataset.filter = filterKey; button.textContent = langContent.newsFilters[filterKey]; button.className = 'news-filter-btn px-3 py-1 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none transition-colors'; if (filterKey === this.activeNewsFilter) button.classList.add('active'); button.addEventListener('click', () => { this.activeNewsFilter = filterKey; this.renderNewsFilters(); this.renderNewsList(); }); filterContainer.appendChild(button); }); contentArea.prepend(filterContainer); },
             renderNewsList() { const listContainer = document.getElementById('news-list'); if (this.isFetchingNews) { listContainer.innerHTML = `<div class="flex justify-center items-center p-8"><div class="loader !border-blue-500 !border-b-transparent"></div></div>`; return; } const platformData = this.newsData[this.activeNewsPlatform]; const newsItems = platformData ? platformData[this.activeNewsFilter] : []; if (!newsItems || newsItems.length === 0) { listContainer.innerHTML = `<p class="text-center text-gray-500 py-8">No news available.</p>`; return; } listContainer.innerHTML = ''; newsItems.forEach(item => { const newsEl = document.createElement('div'); newsEl.className = 'p-4 border-l-4 border-blue-400 bg-blue-50 rounded-r-lg fade-in'; newsEl.innerHTML = `<h4 class="font-semibold text-gray-800">${item.content}</h4><p class="text-sm text-gray-600 mt-1">${item.time}</p>`; listContainer.appendChild(newsEl); }); },
-            
-            // --- UI LOGIC & DATA FETCHING ---
-            toggleLanguage(lang) {
-                this.currentLanguage = lang;
-                this.renderAll();
-            },
-            
-            async togglePortfolio(button) {
-                const investorId = button.dataset.investorId;
-                const investor = this.investorData.find(i => i.id === investorId);
-                const detailsDiv = document.getElementById(`portfolio-${investor.id}`);
-                const langContent = this.content[this.currentLanguage];
-                
-                const buttonTextKey = investor.tagType === '13F' ? 'viewPortfolio' : 'viewTrades';
-                const buttonHideTextKey = investor.tagType === '13F' ? 'hidePortfolio' : 'hideTrades';
-
-                if (detailsDiv.classList.contains('open')) {
-                    detailsDiv.classList.remove('open');
-                    detailsDiv.innerHTML = '';
-                    button.querySelector('span').textContent = langContent[buttonTextKey];
-                    button.classList.remove('bg-gray-200');
-                    return;
-                }
-
-                detailsDiv.classList.add('open');
-                button.querySelector('span').textContent = langContent[buttonHideTextKey];
-                button.classList.add('bg-gray-200');
-
-                if (investor.dataFetched) {
-                     if (investor.tagType === '13F') this.renderPortfolioTable(investor, detailsDiv);
-                     if (investor.tagType === 'StockAct') this.renderTradesTable(investor, detailsDiv);
-                     return;
-                }
-
-                if (investor.tagType === '13F') {
-                    await this.fetch13FHoldings(investor, button);
-                    this.renderPortfolioTable(investor, detailsDiv);
-                } else if (investor.tagType === 'StockAct') {
-                    await this.fetchStockActTrades(investor, button);
-                    this.renderTradesTable(investor, detailsDiv);
-                }
-            },
-            
-            async fetchStockActTrades(investor, button) {
-                const langContent = this.content[this.currentLanguage];
-                investor.isFetching = true;
-                button.querySelector('span').textContent = langContent.fetchingData;
-                button.insertAdjacentHTML('afterbegin', '<div class="loader"></div>');
-
-                try {
-                    const proxyUrl = `/stock-act-proxy?filer=${encodeURIComponent(investor.filingId)}`;
-                    const response = await fetch(proxyUrl);
-                    if (!response.ok) throw new Error(`Stock Act proxy failed: ${response.status}`);
-                    const trades = await response.json();
-                    investor.data = trades;
-                    investor.dataFetched = true;
-                } catch (error) {
-                     console.error(`Failed to fetch STOCK Act data for ${investor.name}:`, error);
-                    investor.data = investor.mockData;
-                    investor.dataFetched = true; 
-                    const detailsDiv = document.getElementById(`portfolio-${investor.id}`);
-                    if(detailsDiv) {
-                        const errorEl = document.createElement('p');
-                        errorEl.className = 'text-xs text-red-500 py-2';
-                        errorEl.textContent = langContent.fetchFailed;
-                        detailsDiv.prepend(errorEl);
-                    }
-                } finally {
-                    investor.isFetching = false;
-                    button.querySelector('.loader')?.remove();
-                    button.querySelector('span').textContent = langContent.hideTrades;
-                }
-            },
-
-            async fetch13FHoldings(investor, button) {
-                const langContent = this.content[this.currentLanguage];
-                investor.isFetching = true;
-                button.querySelector('span').textContent = langContent.fetchingData;
-                button.insertAdjacentHTML('afterbegin', '<div class="loader"></div>');
-
-                try {
-                    const proxyUrl = `/sec-proxy?cik=${investor.filingId}`;
-                    const response = await fetch(proxyUrl);
-                    const holdings = await response.json();
-                    
-                    if (!response.ok || holdings.error) {
-                        throw new Error(holdings.error || `Proxy failed with status: ${response.status}`);
-                    }
-
-                    investor.data = holdings;
-                    investor.dataFetched = true;
-                } catch (error) {
-                    console.error(`Failed to fetch 13F data for ${investor.name}:`, error);
-                    investor.data = investor.mockData;
-                    investor.dataFetched = true; 
-                    const detailsDiv = document.getElementById(`portfolio-${investor.id}`);
-                    if(detailsDiv) {
-                        const errorEl = document.createElement('p');
-                        errorEl.className = 'text-xs text-red-500 py-2 break-all';
-                        // *** UPDATED to show detailed error ***
-                        errorEl.textContent = `${langContent.fetchFailedWithReason || 'Fetch Failed:'} ${error.message}`;
-                        detailsDiv.prepend(errorEl);
-                    }
-                } finally {
-                    investor.isFetching = false;
-                    button.querySelector('.loader')?.remove();
-                    button.querySelector('span').textContent = langContent.hidePortfolio;
-                }
-            },
-
-            renderTradesTable(investor, container) {
-                const langContent = this.content[this.currentLanguage];
-                const trades = investor.data || investor.mockData;
-                const headers = langContent.tradesHeaders;
-                if (!trades || trades.length === 0) { container.innerHTML += `<p class="py-4 text-sm text-gray-500">No recent trades available.</p>`; return; }
-                let tableHTML = `<table class="w-full text-sm text-left text-gray-600 my-4"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="py-3 px-4">${headers.date}</th><th scope="col" class="py-3 px-4">${headers.asset}</th><th scope="col" class="py-3 px-4">${headers.type}</th><th scope="col" class="py-3 px-4 text-right">${headers.amount}</th></tr></thead><tbody>`;
-                trades.forEach(t => { tableHTML += `<tr class="bg-white border-b hover:bg-gray-50"><td class="py-3 px-4">${t.transaction_date}</td><td class="py-3 px-4 font-medium text-gray-900">${t.asset_description} (${t.ticker})</td><td class="py-3 px-4">${t.transaction_type}</td><td class="py-3 px-4 text-right">${t.amount_range}</td></tr>`; });
-                tableHTML += `</tbody></table>`;
-                if(!container.querySelector('table')) container.innerHTML += tableHTML;
-            },
-
-            renderPortfolioTable(investor, container) {
-                const langContent = this.content[this.currentLanguage];
-                const holdings = investor.data || investor.mockData;
-                const headers = langContent.portfolioHeaders;
-                if (!holdings || holdings.length === 0) { container.innerHTML += `<p class="py-4 text-sm text-gray-500">No holdings information available.</p>`; return; }
-                let tableHTML = `<table class="w-full text-sm text-left text-gray-600 my-4"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="py-3 px-4">${headers.stock}</th><th scope="col" class="py-3 px-4">${headers.shares}</th><th scope="col" class="py-3 px-4 text-right">${headers.value}</th></tr></thead><tbody>`;
-                holdings.forEach(h => { tableHTML += `<tr class="bg-white border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium text-gray-900">${h.nameOfIssuer}</td><td class="py-3 px-4">${parseInt(h.sshPrnamt || 0).toLocaleString()}</td><td class="py-3 px-4 text-right">${parseInt(h.value || 0).toLocaleString()}</td></tr>`; });
-                tableHTML += `</tbody></table>`;
-                if(!container.querySelector('table')) container.innerHTML += tableHTML;
-            }
+            toggleLanguage(lang) { this.currentLanguage = lang; this.renderAll(); },
+            async togglePortfolio(button) { const investorId = button.dataset.investorId; const investor = this.investorData.find(i => i.id === investorId); const detailsDiv = document.getElementById(`portfolio-${investor.id}`); const langContent = this.content[this.currentLanguage]; const buttonTextKey = investor.tagType === '13F' ? 'viewPortfolio' : 'viewTrades'; const buttonHideTextKey = investor.tagType === '13F' ? 'hidePortfolio' : 'hideTrades'; if (detailsDiv.classList.contains('open')) { detailsDiv.classList.remove('open'); detailsDiv.innerHTML = ''; button.querySelector('span').textContent = langContent[buttonTextKey]; button.classList.remove('bg-gray-200'); return; } detailsDiv.classList.add('open'); button.querySelector('span').textContent = langContent[buttonHideTextKey]; button.classList.add('bg-gray-200'); if (investor.dataFetched) { if (investor.tagType === '13F') this.renderPortfolioTable(investor, detailsDiv); if (investor.tagType === 'StockAct') this.renderTradesTable(investor, detailsDiv); return; } if (investor.tagType === '13F') { await this.fetch13FHoldings(investor, button); this.renderPortfolioTable(investor, detailsDiv); } else if (investor.tagType === 'StockAct') { await this.fetchStockActTrades(investor, button); this.renderTradesTable(investor, detailsDiv); } },
+            async fetchStockActTrades(investor, button) { const langContent = this.content[this.currentLanguage]; investor.isFetching = true; button.querySelector('span').textContent = langContent.fetchingData; button.insertAdjacentHTML('afterbegin', '<div class="loader"></div>'); try { const proxyUrl = `/stock-act-proxy?filer=${encodeURIComponent(investor.filingId)}`; const response = await fetch(proxyUrl); if (!response.ok) throw new Error(`Stock Act proxy failed: ${response.status}`); const trades = await response.json(); investor.data = trades; investor.dataFetched = true; } catch (error) { console.error(`Failed to fetch STOCK Act data for ${investor.name}:`, error); investor.data = investor.mockData; investor.dataFetched = true; const detailsDiv = document.getElementById(`portfolio-${investor.id}`); if(detailsDiv) { const errorEl = document.createElement('p'); errorEl.className = 'text-xs text-red-500 py-2'; errorEl.textContent = langContent.fetchFailed; detailsDiv.prepend(errorEl); } } finally { investor.isFetching = false; button.querySelector('.loader')?.remove(); button.querySelector('span').textContent = langContent.hideTrades; } },
+            async fetch13FHoldings(investor, button) { const langContent = this.content[this.currentLanguage]; investor.isFetching = true; button.querySelector('span').textContent = langContent.fetchingData; button.insertAdjacentHTML('afterbegin', '<div class="loader"></div>'); try { const proxyUrl = `/sec-proxy?cik=${investor.filingId}`; const response = await fetch(proxyUrl); const holdings = await response.json(); if (!response.ok || holdings.error) { throw new Error(holdings.error || `Proxy failed with status: ${response.status}`); } investor.data = holdings; investor.dataFetched = true; } catch (error) { console.error(`Failed to fetch 13F data for ${investor.name}:`, error); investor.data = investor.mockData; investor.dataFetched = true; const detailsDiv = document.getElementById(`portfolio-${investor.id}`); if(detailsDiv) { const errorEl = document.createElement('p'); errorEl.className = 'text-xs text-red-500 py-2 break-all'; errorEl.textContent = `${langContent.fetchFailedWithReason || 'Fetch Failed:'} ${error.message}`; detailsDiv.prepend(errorEl); } } finally { investor.isFetching = false; button.querySelector('.loader')?.remove(); button.querySelector('span').textContent = langContent.hidePortfolio; } },
+            renderTradesTable(investor, container) { const langContent = this.content[this.currentLanguage]; const trades = investor.data || investor.mockData; const headers = langContent.tradesHeaders; if (!trades || trades.length === 0) { container.innerHTML += `<p class="py-4 text-sm text-gray-500">No recent trades available.</p>`; return; } let tableHTML = `<table class="w-full text-sm text-left text-gray-600 my-4"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="py-3 px-4">${headers.date}</th><th scope="col" class="py-3 px-4">${headers.asset}</th><th scope="col" class="py-3 px-4">${headers.type}</th><th scope="col" class="py-3 px-4 text-right">${headers.amount}</th></tr></thead><tbody>`; trades.forEach(t => { tableHTML += `<tr class="bg-white border-b hover:bg-gray-50"><td class="py-3 px-4">${t.transaction_date}</td><td class="py-3 px-4 font-medium text-gray-900">${t.asset_description} (${t.ticker})</td><td class="py-3 px-4">${t.transaction_type}</td><td class="py-3 px-4 text-right">${t.amount_range}</td></tr>`; }); tableHTML += `</tbody></table>`; if(!container.querySelector('table')) container.innerHTML += tableHTML; },
+            renderPortfolioTable(investor, container) { const langContent = this.content[this.currentLanguage]; const holdings = investor.data || investor.mockData; const headers = langContent.portfolioHeaders; if (!holdings || holdings.length === 0) { container.innerHTML += `<p class="py-4 text-sm text-gray-500">No holdings information available.</p>`; return; } let tableHTML = `<table class="w-full text-sm text-left text-gray-600 my-4"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="py-3 px-4">${headers.stock}</th><th scope="col" class="py-3 px-4">${headers.shares}</th><th scope="col" class="py-3 px-4 text-right">${headers.value}</th></tr></thead><tbody>`; holdings.forEach(h => { tableHTML += `<tr class="bg-white border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium text-gray-900">${h.nameOfIssuer}</td><td class="py-3 px-4">${parseInt(h.sshPrnamt || 0).toLocaleString()}</td><td class="py-3 px-4 text-right">${parseInt(h.value || 0).toLocaleString()}</td></tr>`; }); tableHTML += `</tbody></table>`; if(!container.querySelector('table')) container.innerHTML += tableHTML; }
         };
-
-        // --- RUN APP ---
-        document.addEventListener('DOMContentLoaded', () => {
-            app.init();
-        });
+        document.addEventListener('DOMContentLoaded', () => { app.init(); });
     </script>
-
 </body>
 </html>
